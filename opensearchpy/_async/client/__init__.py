@@ -1985,6 +1985,43 @@ class AsyncOpenSearch(object):
         )
 
     @query_params()
+    async def delete_point_in_time(self, body=None, params=None, headers=None):
+        """
+        Delete a point in time
+
+
+        :arg body: list of point-in-time ids to delete
+        """
+        return await self.transport.perform_request(
+            "DELETE", "/_search/point_in_time", params=params, headers=headers, body=body
+        )
+
+    @query_params(
+        "expand_wildcards", "ignore_unavailable", "keep_alive", "preference", "routing"
+    )
+    async def create_point_in_time(self, index=None, params=None, headers=None):
+        """
+        Create a point in time that can be used in subsequent searches
+
+
+        :arg index: A comma-separated list of index names to open point
+            in time; use `_all` or empty string to perform the operation on all
+            indices
+        :arg expand_wildcards: Whether to expand wildcard expression to
+            concrete indices that are open, closed or both.  Valid choices: open,
+            closed, hidden, none, all  Default: open
+        :arg ignore_unavailable: Whether specified concrete indices
+            should be ignored when unavailable (missing or closed)
+        :arg keep_alive: Specific the time to live for the point in time
+        :arg preference: Specify the node or shard the operation should
+            be performed on (default: random)
+        :arg routing: Specific routing value
+        """
+        return await self.transport.perform_request(
+            "POST", _make_path(index, "_search/point_in_time"), params=params, headers=headers
+        )
+
+    @query_params()
     async def terms_enum(self, index, body=None, params=None, headers=None):
         """
         The terms enum API  can be used to discover terms in the index that begin with
